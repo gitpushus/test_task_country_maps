@@ -1,0 +1,52 @@
+services:
+  db:
+    image: mariadb:10.5.23
+    container_name: 'mariadb'
+    networks:
+      - country_maps
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+    volumes:
+      - ./mariadb:/var/lib/mysql
+  phpmyadmin:
+    image: arm64v8/phpmyadmin
+    container_name: 'pma'
+    ports:
+    - "8081:80"
+    environment:
+      PMA_HOST: db
+      MAX_EXECUTION_TIME: ${PMA_MAX_EXECUTION_TIME}
+      MEMORY_LIMIT: ${PMA_MEMORY_LIMIT}
+    depends_on:
+      - db
+    networks:
+      - country_maps
+  php:
+    build: ./flight
+    volumes:
+      - ./flight:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - country_maps
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./flight/public:/var/www/html 
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - php
+    networks:
+      - country_maps
+networks:
+  country_maps:
+    driver: bridge
