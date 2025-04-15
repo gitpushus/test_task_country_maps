@@ -10,7 +10,7 @@ class CreateAttractionDto
         public int $city_id
     ){
         if (empty($name) || $distance_from_center < 0 || $city_id <= 0) {
-            throw new AttractionBadRequestException("Fields can't be empty");
+            throw new AttractionBadRequestException("Incorrect fields data");
         }
     }
 }

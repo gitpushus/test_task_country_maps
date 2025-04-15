@@ -8,6 +8,7 @@ use App\Application\UseCases\GetAttractionUseCase;
 use App\Application\UseCases\UpdateAttractionUseCase;
 use App\Domain\Dto\CreateAttractionDto;
 use App\Domain\Dto\UpdateAttractionDto;
+use App\Domain\Exceptions\AttractionBadRequestException;
 use App\Domain\Exceptions\AttractionNotFoundException;
 use App\Domain\Exceptions\CityNotFoundException;
 use flight\Engine;
@@ -48,7 +49,7 @@ class AttractionController{
             );
             $id = $this->createAttractionUseCase->execute($attractionDto);
             $this->app->json(['id' => $id]);
-        }catch(CityNotFoundException $e){
+        }catch(CityNotFoundException|AttractionBadRequestException $e){
             $this->app->halt($e->getCode(), json_encode(['error' => $e->getMessage()]));
         }catch (\Exception $e) {
             $this->app->halt(500, json_encode(['error' => 'Internal Server Error']));
