@@ -8,10 +8,16 @@ class DatabaseAttractionRepository implements AttractionRepositoryInterface {
     public function __construct(
         private \PDO $pdo
     ){}
-    public function getAll(): array
+    public function getAll(?int $cityId): array
     {
-        $query = $this->pdo->prepare("SELECT * FROM attraction");
-        $query->execute();
+        $sql = "SELECT * FROM attraction";
+        $params = [];
+        if ($cityId !== null){
+            $sql .= " WHERE city_id = :cityId";
+            $params["cityId"] = $cityId;
+        }
+        $query = $this->pdo->prepare($sql);
+        $query->execute($params);
         $attraction = [];
         while($row = $query->fetch()){
             $attraction[] = new Attraction(

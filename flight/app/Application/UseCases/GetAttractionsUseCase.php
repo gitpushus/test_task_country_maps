@@ -8,7 +8,7 @@ class GetAttractionsUseCase
     public function __construct(
         private readonly AttractionRepositoryInterface $repository
     ){}
-    public function execute(): array{
-        return $this->repository->getAll();
+    public function execute(?int $cityId): array{
+        return $this->repository->getAll($cityId);
     }
 }

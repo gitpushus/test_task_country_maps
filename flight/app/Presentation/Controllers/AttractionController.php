@@ -24,7 +24,8 @@ class AttractionController{
     ) {}
     public function index():void
     {
-        $attractions = $this->getAttractionsUseCase->execute();
+        $cityId = $this->app->request()->query['city_id'] ?? null;
+        $attractions = $this->getAttractionsUseCase->execute($cityId);
         $this->app->json($attractions, 200, true, 'utf-8', JSON_UNESCAPED_UNICODE);
     }
     public function show(int $id):void
