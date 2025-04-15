@@ -1,6 +1,5 @@
 <?php
 $dbConfig = require __DIR__ . '/config/database.php';
-print_r($dbConfig);
 return
 [
     'paths' => [
