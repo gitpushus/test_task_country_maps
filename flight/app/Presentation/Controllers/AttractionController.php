@@ -63,15 +63,10 @@ class AttractionController{
             if (empty($data)) {
                 throw new \Exception();
             }
-            $attractionDto = new UpdateAttractionDto(
-                $id,
-                $data['name'] ?? null,
-                $data['distance_from_center'] ?? null,
-                $data['city_id'] ?? null,
-            );
+            $attractionDto = UpdateAttractionDto::fromArray($id, $data);
             $this->updateAttractionUseCase->execute($attractionDto);
             $this->app->json(['success' => true]);
-        }catch(AttractionNotFoundException|CityNotFoundException $e){
+        }catch(AttractionNotFoundException|CityNotFoundException|\InvalidArgumentException $e){
             $this->app->halt($e->getCode(), json_encode(['error' => $e->getMessage()]));
         } catch (\Exception $e) {
             $this->app->halt(500, json_encode(['error' => 'Internal Server Error']));
