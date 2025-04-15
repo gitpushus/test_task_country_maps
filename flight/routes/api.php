@@ -10,6 +10,7 @@ use App\Application\UseCases\GetCitiesUseCase;
 use App\Application\UseCases\GetCityUseCase;
 use App\Application\UseCases\UpdateAttractionUseCase;
 use App\Application\UseCases\UpdateCityUseCase;
+use App\Presentation\Controllers\AttractionController;
 use App\Presentation\Controllers\CityController;
 
 Flight::register('getCitiesUseCase', GetCitiesUseCase::class, [Flight::cityRepository()]);
@@ -45,20 +46,20 @@ Flight::register('createAttractionUseCase', CreateAttractionUseCase::class, [
     Flight::getCityUseCase()
 ]);
 Flight::register('updateAttractionUseCase', UpdateAttractionUseCase::class, [
-    Flight::cityRepository(),
+    Flight::attractionRepository(),
     Flight::getAttractionUseCase(),
     Flight::getCityUseCase()
 ]);
-Flight::register('deleteCityUseCase', DeleteAttractionUseCase::class, [
-    Flight::cityRepository(),
+Flight::register('deleteAttractionUseCase', DeleteAttractionUseCase::class, [
+    Flight::attractionRepository(),
     Flight::getAttractionUseCase()
 ]);
-Flight::register('attractionController', CityController::class, [
+Flight::register('attractionController', AttractionController::class, [
     Flight::getAttractionsUseCase(),
     Flight::getAttractionUseCase(),
-    Flight::createAttractionseUseCase(),
-    Flight::updateAttractionseUseCase(),
-    Flight::deleteAttractionseUseCase(),
+    Flight::createAttractionUseCase(),
+    Flight::updateAttractionUseCase(),
+    Flight::deleteAttractionUseCase(),
     Flight::app()
 ]);
 
