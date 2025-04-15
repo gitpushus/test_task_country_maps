@@ -1,5 +1,6 @@
 <?php
 namespace App\Application\UseCases;
+use App\Domain\Dto\CreateAttractionDto;
 use App\Domain\Entities\Attraction;
 use App\Domain\Exceptions\AttractionBadRequestException;
 use App\Domain\Exceptions\CityNotFoundException;
@@ -15,11 +16,11 @@ class CreateAttractionUseCase
     /**
      * @throws CityNotFoundException
      */
-    public function execute(string $name, int $distance_from_center, int $city_id):int
+    public function execute(CreateAttractionDto $attractionDto):int
     {
-        if (empty($distance_from_center) || empty($name) || empty($city_id)) {
-            throw new AttractionBadRequestException("Fields can't be empty");
-        }
+        $distance_from_center = $attractionDto->distance_from_center;
+        $name = $attractionDto->name;
+        $city_id = $attractionDto->city_id;
         $city = $this->getCityUseCase->execute($city_id);
         $attraction = new Attraction(
             null,
