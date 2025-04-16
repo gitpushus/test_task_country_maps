@@ -2,16 +2,22 @@
 
 use App\Application\UseCases\CreateAttractionUseCase;
 use App\Application\UseCases\CreateCityUseCase;
+use App\Application\UseCases\CreateTravelerUseCase;
 use App\Application\UseCases\DeleteAttractionUseCase;
 use App\Application\UseCases\DeleteCityUseCase;
+use App\Application\UseCases\DeleteTravelerUseCase;
 use App\Application\UseCases\GetAttractionsUseCase;
 use App\Application\UseCases\GetAttractionUseCase;
 use App\Application\UseCases\GetCitiesUseCase;
 use App\Application\UseCases\GetCityUseCase;
+use App\Application\UseCases\GetTravelersUseCase;
+use App\Application\UseCases\GetTravelerUseCase;
 use App\Application\UseCases\UpdateAttractionUseCase;
 use App\Application\UseCases\UpdateCityUseCase;
+use App\Application\UseCases\UpdateTravelerUseCase;
 use App\Presentation\Controllers\AttractionController;
 use App\Presentation\Controllers\CityController;
+use App\Presentation\Controllers\TravelerController;
 
 Flight::register('getCitiesUseCase', GetCitiesUseCase::class, [Flight::cityRepository()]);
 Flight::register('getCityUseCase', GetCityUseCase::class, [Flight::cityRepository()]);
@@ -68,3 +74,29 @@ Flight::route('GET /attractions/@id:[0-9]+', [Flight::attractionController(), 's
 Flight::route('POST /attractions', [Flight::attractionController(), 'store']);
 Flight::route('PUT /attractions/@id:[0-9]+', [Flight::attractionController(), 'update']);
 Flight::route('DELETE /attractions/@id:[0-9]+', [Flight::attractionController(), 'destroy']);
+
+Flight::register('getTravelersUseCase', GetTravelersUseCase::class, [Flight::travelerRepository()]);
+Flight::register('getTravelerUseCase', GetTravelerUseCase::class, [Flight::travelerRepository()]);
+Flight::register('createTravelerUseCase', CreateTravelerUseCase::class, [Flight::travelerRepository()]);
+Flight::register('updateTravelerUseCase', UpdateTravelerUseCase::class, [
+    Flight::travelerRepository(),
+    Flight::getTravelerUseCase()
+]);
+Flight::register('deleteTravelerUseCase', DeleteTravelerUseCase::class, [
+    Flight::travelerRepository(),
+    Flight::getTravelerUseCase()
+]);
+Flight::register('travelerController', TravelerController::class, [
+    Flight::getTravelersUseCase(),
+    Flight::getTravelerUseCase(),
+    Flight::createTravelerUseCase(),
+    Flight::updateTravelerUseCase(),
+    Flight::deleteTravelerUseCase(),
+    Flight::app()
+]);
+
+Flight::route('GET /travelers', [Flight::travelerController(), 'index']);
+Flight::route('GET /travelers/@id:[0-9]+', [Flight::travelerController(), 'show']);
+Flight::route('POST /travelers', [Flight::travelerController(), 'store']);
+Flight::route('PUT /travelers/@id:[0-9]+', [Flight::travelerController(), 'update']);
+Flight::route('DELETE /travelers/@id:[0-9]+', [Flight::travelerController(), 'destroy']);
