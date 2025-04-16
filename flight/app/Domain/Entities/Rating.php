@@ -1,6 +1,6 @@
 <?php
 namespace App\Domain\Entities;
-class Raiting{
+class Rating{
     public function __construct(
         public readonly ?int $id,
         public readonly int $traveler_id,
