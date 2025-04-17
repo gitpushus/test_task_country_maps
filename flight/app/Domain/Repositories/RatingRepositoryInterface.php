@@ -5,6 +5,6 @@ use App\Domain\Entities\Rating;
 
 interface RatingRepositoryInterface{
     public function create(Rating $ratingDto): void;
-    public function getRatingAttraction(int $attraction_id): Rating;
-    public function getRatingTraveler(int $traveler_id): Rating;
+    public function getRatingAttraction(int $attraction_id): array;
+    public function getRatingTraveler(int $traveler_id): array;
 }
