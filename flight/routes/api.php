@@ -2,6 +2,7 @@
 
 use App\Application\UseCases\CreateAttractionUseCase;
 use App\Application\UseCases\CreateCityUseCase;
+use App\Application\UseCases\CreateRatingUseCase;
 use App\Application\UseCases\CreateTravelerUseCase;
 use App\Application\UseCases\DeleteAttractionUseCase;
 use App\Application\UseCases\DeleteCityUseCase;
@@ -10,6 +11,8 @@ use App\Application\UseCases\GetAttractionsUseCase;
 use App\Application\UseCases\GetAttractionUseCase;
 use App\Application\UseCases\GetCitiesUseCase;
 use App\Application\UseCases\GetCityUseCase;
+use App\Application\UseCases\GetRatingAttraction;
+use App\Application\UseCases\GetRatingTraveler;
 use App\Application\UseCases\GetTravelersUseCase;
 use App\Application\UseCases\GetTravelerUseCase;
 use App\Application\UseCases\UpdateAttractionUseCase;
@@ -17,6 +20,7 @@ use App\Application\UseCases\UpdateCityUseCase;
 use App\Application\UseCases\UpdateTravelerUseCase;
 use App\Presentation\Controllers\AttractionController;
 use App\Presentation\Controllers\CityController;
+use App\Presentation\Controllers\RatingController;
 use App\Presentation\Controllers\TravelerController;
 
 Flight::register('getCitiesUseCase', GetCitiesUseCase::class, [Flight::cityRepository()]);
@@ -100,3 +104,20 @@ Flight::route('GET /travelers/@id:[0-9]+', [Flight::travelerController(), 'show'
 Flight::route('POST /travelers', [Flight::travelerController(), 'store']);
 Flight::route('PUT /travelers/@id:[0-9]+', [Flight::travelerController(), 'update']);
 Flight::route('DELETE /travelers/@id:[0-9]+', [Flight::travelerController(), 'destroy']);
+
+Flight::register('createRatingUseCase', CreateRatingUseCase::class, [
+    Flight::ratingRepository(),
+    Flight::getAttractionUseCase(),
+    Flight::getTravelerUseCase(),
+]);
+Flight::register('getRatingAttractionUseCase', GetRatingAttraction::class, [Flight::ratingRepository()]);
+Flight::register('getRatingTravelerUseCase', GetRatingTraveler::class, [Flight::ratingRepository()]);
+Flight::register('ratingController', RatingController::class, [
+    Flight::createRatingUseCase(),
+    Flight::getRatingAttractionUseCase(),
+    Flight::getRatingTravelerUseCase(),
+    Flight::app()
+]);
+Flight::route('POST /ratings', [Flight::ratingController(), 'store']);
+Flight::route('GET /ratings/attraction/@id:[0-9]+', [Flight::ratingController(), 'getRatingAttraction']);
+Flight::route('GET /ratings/traveler/@id:[0-9]+', [Flight::ratingController(), 'getRatingTraveler']);

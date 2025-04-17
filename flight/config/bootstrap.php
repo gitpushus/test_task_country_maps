@@ -4,6 +4,7 @@ $dbConfig = require __DIR__ . '/database.php';
 
 use App\Infrastructure\Repositories\DatabaseAttractionRepository;
 use App\Infrastructure\Repositories\DatabaseCityRepository;
+use App\Infrastructure\Repositories\DatabaseRatingRepository;
 use App\Infrastructure\Repositories\DatabaseTravelerRepository;
 
 Flight::register('db', PDO::class, [
@@ -15,4 +16,5 @@ Flight::register('db', PDO::class, [
 Flight::register('cityRepository', DatabaseCityRepository::class, [Flight::db()]);
 Flight::register('attractionRepository', DatabaseAttractionRepository::class, [Flight::db()]);
 Flight::register('travelerRepository', DatabaseTravelerRepository::class, [Flight::db()]);
+Flight::register('ratingRepository', DatabaseRatingRepository::class, [Flight::db()]);
 require __DIR__ . '/../routes/api.php';

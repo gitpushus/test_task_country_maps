@@ -18,14 +18,14 @@ class CreateRatingUseCase{
      * @throws AttractionNotFoundException
      * @throws TravelerNotFoundException
      */
-    public function execute(RatingDto $rating_dto): Rating
+    public function execute(RatingDto $rating_dto): int
     {
         $this->getAttractionUseCase->execute($rating_dto->attraction_id);
         $this->getTravelerUseCase->execute($rating_dto->traveler_id);
         $rating = new Rating(
             null,
-            $rating_dto->attraction_id,
             $rating_dto->traveler_id,
+            $rating_dto->attraction_id,
             $rating_dto->score
         );
         $this->repository->create($rating);
