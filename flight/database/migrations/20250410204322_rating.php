@@ -15,7 +15,7 @@ final class Rating extends AbstractMigration
                 'values' => ['1', '2', '3', '4', '5'],
                 'null' => false
             ])
-            ->addIndex(['traveler_id', 'attraction_id', 'score'], ['unique' => true, 'name' => 'idx_traveler_attraction_score'])
+            ->addIndex(['traveler_id', 'attraction_id'], ['unique' => true, 'name' => 'idx_traveler_attraction'])
             ->addForeignKey('traveler_id', 'traveler', 'id', [
                 'delete'=> 'SET NULL', 
                 'update'=> 'CASCADE',
