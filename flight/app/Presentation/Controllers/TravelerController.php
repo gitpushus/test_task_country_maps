@@ -5,6 +5,7 @@ use App\Application\UseCases\CreateTravelerUseCase;
 use App\Application\UseCases\DeleteTravelerUseCase;
 use App\Application\UseCases\GetTravelersUseCase;
 use App\Application\UseCases\GetTravelerUseCase;
+use App\Application\UseCases\GetVisitedSitiesTravelerUseCase;
 use App\Application\UseCases\UpdateTravelerUseCase;
 use App\Domain\Exceptions\TravelerBadRequestException;
 use App\Domain\Exceptions\TravelerNotFoundException;
@@ -18,6 +19,7 @@ class TravelerController
         private CreateTravelerUseCase $createTravelerUseCase,
         private UpdateTravelerUseCase $updateTravelerUseCase,
         private DeleteTravelerUseCase $deleteTravelerUseCase,
+        private GetVisitedSitiesTravelerUseCase $getVisitedSitiesTravelerUseCase,
         private Engine $app
     ){}
     public function index():void
@@ -80,6 +82,15 @@ class TravelerController
         }catch (\Exception $e) {
             $this->app->halt(500, json_encode(['error' => 'Internal Server Error']));
         }
-
+    }
+    public function getVisitedCities(int $id): void{
+        try{
+            $cities = $this->getVisitedSitiesTravelerUseCase->execute($id);
+            $this->app->json($cities);
+        }catch (TravelerNotFoundException $e){
+            $this->app->halt($e->getCode(), json_encode(['error' => $e->getMessage()]));
+        }catch (\Exception $e) {
+            $this->app->halt(500, json_encode(['error' => 'Internal Server Error']));
+        }
     }
 }

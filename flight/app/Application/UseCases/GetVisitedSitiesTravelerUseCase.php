@@ -1,11 +1,9 @@
 <?php
 namespace App\Application\UseCases;
-use App\Domain\Entities\Traveler;
 use App\Domain\Exceptions\TravelerNotFoundException;
 use App\Domain\Repositories\TravelerRepositoryInterface;
 
-class GetTravelerUseCase
-{
+class GetVisitedSitiesTravelerUseCase{
     public function __construct(
         private readonly TravelerRepositoryInterface $repository
     ){}
@@ -13,12 +11,11 @@ class GetTravelerUseCase
     /**
      * @throws TravelerNotFoundException
      */
-    public function execute(int $id): Traveler
-    {
+    public function execute(int $id): array{
         $traveler = $this->repository->getOne($id);
         if ($traveler === null){
             throw new TravelerNotFoundException($id);
         }
-        return $traveler;
+        return $this->repository->getVisitedSities($id);
     }
 }

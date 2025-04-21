@@ -7,4 +7,5 @@ interface TravelerRepositoryInterface {
     public function create(Traveler $traveler): int;
     public function update(Traveler $traveler): void;
     public function delete(int $id): void;
+    public function getVisitedSities(int $id): array;
 }

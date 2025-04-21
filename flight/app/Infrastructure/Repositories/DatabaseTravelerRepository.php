@@ -44,4 +44,15 @@ class DatabaseTravelerRepository implements TravelerRepositoryInterface {
         $query = $this->pdo->prepare("DELETE FROM traveler WHERE id = :id");
         $query->execute([":id" => $id]);
     }
+
+    public function getVisitedSities(int $id): array
+    {
+        $query = $this->pdo->prepare("SELECT distinct `city`.`name` FROM `traveler` LEFT JOIN `rating` ON `traveler`.`id` = `rating`.`traveler_id` LEFT JOIN `attraction` ON `rating`.`attraction_id` = `attraction`.`id` LEFT JOIN `city` ON `attraction`.`city_id` = `city`.`id` WHERE `traveler`.`id` = :id");
+        $query->execute([":id" => $id]);
+        $cities = [];
+        while($row = $query->fetch()){
+            $cities[] = $row["name"];
+        }
+        return $cities;
+    }
 }
