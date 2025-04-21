@@ -28,6 +28,6 @@ class CreateRatingUseCase{
             $rating_dto->attraction_id,
             $rating_dto->score
         );
-        $this->repository->create($rating);
+        return $this->repository->create($rating);
     }
 }
