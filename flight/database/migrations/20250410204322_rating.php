@@ -19,12 +19,12 @@ final class Rating extends AbstractMigration
             ->addForeignKey('traveler_id', 'traveler', 'id', [
                 'delete'=> 'SET NULL', 
                 'update'=> 'CASCADE',
-                'constraint' => 'fk_raiting_to_traveler'
+                'constraint' => 'fk_rating_to_traveler'
             ])
             ->addForeignKey('attraction_id', 'attraction', 'id', [
                 'delete'=> 'CASCADE', 
                 'update'=> 'CASCADE',
-                'constraint' => 'fk_raiting_to_attraction'
+                'constraint' => 'fk_rating_to_attraction'
             ])
             ->create();
     }
