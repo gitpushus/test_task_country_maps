@@ -25,7 +25,8 @@ class AttractionController{
     public function index():void
     {
         $cityId = $this->app->request()->query['city_id'] ?? null;
-        $attractions = $this->getAttractionsUseCase->execute($cityId);
+        $minRating = $this->app->request()->query['min_rating'] ?? null;
+        $attractions = $this->getAttractionsUseCase->execute($cityId, $minRating);
         $this->app->json($attractions, 200, true, 'utf-8', JSON_UNESCAPED_UNICODE);
     }
     public function show(int $id):void

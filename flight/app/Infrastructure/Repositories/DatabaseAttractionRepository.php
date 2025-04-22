@@ -1,25 +1,40 @@
 <?php
+
 namespace App\Infrastructure\Repositories;
 
 use App\Domain\Entities\Attraction;
 use App\Domain\Repositories\AttractionRepositoryInterface;
 
-class DatabaseAttractionRepository implements AttractionRepositoryInterface {
+class DatabaseAttractionRepository implements AttractionRepositoryInterface
+{
     public function __construct(
         private \PDO $pdo
     ){}
-    public function getAll(?int $cityId): array
+    public function getAll(?int $cityId, ?int $minRating): array
     {
         $sql = "SELECT * FROM attraction";
         $params = [];
-        if ($cityId !== null){
+        if ($minRating !== null) {
+            $sql .= " LEFT JOIN(
+                SELECT AVG(score) AS `avg_score`, `attraction_id`
+                FROM `rating`
+                GROUP BY `attraction_id`
+                ) `avg_rating`
+                ON `attraction`.`id` = `avg_rating`.`attraction_id`
+                WHERE `avg_score` > :minRating";
+            $params["minRating"] = $minRating;
+        }
+        if ($cityId !== null) {
+            if (mb_strpos($sql, "WHERE") !== false) {
+                $sql .= " AND ";
+            }
             $sql .= " WHERE city_id = :cityId";
             $params["cityId"] = $cityId;
         }
         $query = $this->pdo->prepare($sql);
         $query->execute($params);
         $attraction = [];
-        while($row = $query->fetch()){
+        while ($row = $query->fetch()) {
             $attraction[] = new Attraction(
                 $row['id'],
                 $row['name'],
@@ -34,7 +49,7 @@ class DatabaseAttractionRepository implements AttractionRepositoryInterface {
         $query = $this->pdo->prepare("SELECT * FROM attraction WHERE id = :id");
         $query->execute([':id' => $id]);
         $row = $query->fetch();
-        if (!$row){
+        if (!$row) {
             return null;
         }
         return new Attraction($row['id'], $row['name'], $row['distance_from_center'], $row['city_id']);
