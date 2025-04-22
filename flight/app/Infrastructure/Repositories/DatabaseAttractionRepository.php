@@ -14,23 +14,22 @@ class DatabaseAttractionRepository implements AttractionRepositoryInterface
     {
         $sql = "SELECT * FROM attraction";
         $params = [];
+        $conditions = [];
         if ($minRating !== null) {
             $sql .= " LEFT JOIN(
                 SELECT AVG(score) AS `avg_score`, `attraction_id`
                 FROM `rating`
                 GROUP BY `attraction_id`
                 ) `avg_rating`
-                ON `attraction`.`id` = `avg_rating`.`attraction_id`
-                WHERE `avg_score` > :minRating";
+                ON `attraction`.`id` = `avg_rating`.`attraction_id`";
+            $conditions[] = "avg_score > :minRating";
             $params["minRating"] = $minRating;
         }
         if ($cityId !== null) {
-            if (mb_strpos($sql, "WHERE") !== false) {
-                $sql .= " AND ";
-            }
-            $sql .= " WHERE city_id = :cityId";
+            $conditions[] = "city_id = :cityId";
             $params["cityId"] = $cityId;
         }
+        $sql .= " WHERE ".implode(" AND ", $conditions);
         $query = $this->pdo->prepare($sql);
         $query->execute($params);
         $attraction = [];
