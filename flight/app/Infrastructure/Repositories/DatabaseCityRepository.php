@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Repositories;
 
 use App\Domain\Entities\City;
+use App\Domain\Entities\Traveler;
 use App\Domain\Repositories\CityRepositoryInterface;
 
 class DatabaseCityRepository implements CityRepositoryInterface
@@ -47,5 +48,15 @@ class DatabaseCityRepository implements CityRepositoryInterface
     {
         $query = $this->pdo->prepare("DELETE FROM city WHERE id = :id");
         $query->execute([':id' => $id]);
+    }
+    public function getTravelers(int $id): array
+    {
+        $query = $this->pdo->prepare("SELECT distinct `traveler`.`name`, `traveler`.id FROM `traveler` LEFT JOIN `rating` ON `traveler`.`id` = `rating`.`traveler_id` LEFT JOIN `attraction` ON `rating`.`attraction_id` = `attraction`.`id` LEFT JOIN `city` ON `attraction`.`city_id` = `city`.`id` WHERE `city`.`id` = :id");
+        $query->execute([":id" => $id]);
+        $traveler = [];
+        while($row = $query->fetch()){
+            $traveler[] = new Traveler($row['id'], $row['name']);
+        }
+        return $traveler;
     }
 }

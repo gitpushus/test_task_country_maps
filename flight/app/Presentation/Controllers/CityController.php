@@ -5,6 +5,7 @@ use App\Application\UseCases\CreateCityUseCase;
 use App\Application\UseCases\DeleteCityUseCase;
 use App\Application\UseCases\GetCitiesUseCase;
 use App\Application\UseCases\GetCityUseCase;
+use App\Application\UseCases\GetTravelersCityUseCase;
 use App\Application\UseCases\UpdateCityUseCase;
 use App\Domain\Exceptions\CityBadRequestException;
 use App\Domain\Exceptions\CityNotFoundException;
@@ -17,6 +18,7 @@ class CityController
         private CreateCityUseCase $createCityUseCase,
         private UpdateCityUseCase $updateCityUseCase,
         private DeleteCityUseCase $deleteCityUseCase,
+        private GetTravelersCityUseCase $getTravelersCityUseCase,
         private Engine $app
     ) {}
     public function index():void
@@ -79,6 +81,16 @@ class CityController
         }catch (\Exception $e) {
             $this->app->halt(500, json_encode(['error' => 'Internal Server Error']));
         }
-
+    }
+    public function getTravelers(int $id):void
+    {
+        try{
+            $travelers = $this->getTravelersCityUseCase->execute($id);
+            $this->app->json($travelers);
+        }catch(CityNotFoundException $e){
+            $this->app->halt($e->getCode(), json_encode(['error' => $e->getMessage()]));
+        }catch (\Exception $e) {
+            $this->app->halt(500, json_encode(['error' => 'Internal Server Error']));
+        }
     }
 }

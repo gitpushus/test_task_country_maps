@@ -13,6 +13,7 @@ use App\Application\UseCases\GetCitiesUseCase;
 use App\Application\UseCases\GetCityUseCase;
 use App\Application\UseCases\GetRatingAttraction;
 use App\Application\UseCases\GetRatingTraveler;
+use App\Application\UseCases\GetTravelersCityUseCase;
 use App\Application\UseCases\GetTravelersUseCase;
 use App\Application\UseCases\GetTravelerUseCase;
 use App\Application\UseCases\GetVisitedSitiesTravelerUseCase;
@@ -35,17 +36,22 @@ Flight::register('deleteCityUseCase', DeleteCityUseCase::class, [
     Flight::cityRepository(),
     Flight::getCityUseCase()
     ]);
+Flight::register('getTravelersCityUseCase', GetTravelersCityUseCase::class, [
+    Flight::cityRepository()
+]);
 Flight::register('cityController', CityController::class, [
     Flight::getCitiesUseCase(),
     Flight::getCityUseCase(),
     Flight::createCityUseCase(),
     Flight::updateCityUseCase(),
     Flight::deleteCityUseCase(),
+    Flight::getTravelersCityUseCase(),
     Flight::app()
 ]);
 
 Flight::route('GET /cities', [Flight::cityController(), 'index']);
 Flight::route('GET /cities/@id:[0-9]+', [Flight::cityController(), 'show']);
+Flight::route('GET /cities/@id:[0-9]+/travelers', [Flight::cityController(), 'getTravelers']);
 Flight::route('POST /cities', [Flight::cityController(), 'store']);
 Flight::route('PUT /cities/@id:[0-9]+', [Flight::cityController(), 'update']);
 Flight::route('DELETE /cities/@id:[0-9]+', [Flight::cityController(), 'destroy']);

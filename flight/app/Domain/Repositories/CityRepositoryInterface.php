@@ -7,4 +7,5 @@ interface CityRepositoryInterface {
     public function create(City $city): int;
     public function update(City $city): void;
     public function delete(int $id): void;
+    public function getTravelers(int $id): array;
 }
